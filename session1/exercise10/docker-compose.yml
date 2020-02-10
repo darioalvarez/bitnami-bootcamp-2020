@@ -1,0 +1,93 @@
+version: '3'
+services:
+  # Containers go here
+  mariadb:
+    image: bitnami/mariadb:10.1
+    environment: 
+      MARIADB_DATABASE : bitnami
+      MARIADB_ROOT_PASSWORD : rootroot12
+      MARIADB_USER : user
+      MARIADB_PASSWORD : pass123
+    volumes: 
+      - 'mariadb_data:/bitnami/mariadb'
+    networks:
+      - network_joomla
+      - network_wordpress
+  wordpress:
+    image: bitnami/wordpress
+    environment:
+      VIRTUAL_HOST : myfirstwp.net
+      MARIADB_HOST : mariadb
+      MARIADB_PORT_NUMBER : 3306
+      MARIADB_ROOT_PASSWORD: rootroot12
+      MYSQL_CLIENT_CREATE_DATABASE_NAME: bitnami
+      MYSQL_CLIENT_CREATE_DATABASE_USER: user
+      MYSQL_CLIENT_CREATE_DATABASE_PASSWORD: pass123
+      WORDPRESS_DATABASE_NAME : bitnami
+      WORDPRESS_DATABASE_USER : user
+      WORDPRESS_DATABASE_PASSWORD : pass123
+      WORDPRESS_USERNAME: user
+      WORDPRESS_PASSWORD: pass123
+      WORDPRESS_EMAIL: daa.developer@gmail.com
+      WORDPRESS_FIRST_NAME: Dario
+      WORDPRESS_LAST_NAME: Alvarez Arteaga
+      WORDPRESS_BLOG_NAME: Dario
+    volumes:
+      - 'wordpress_data:/bitnami'
+    ports:
+      - 8081:80
+      - 8444:443
+    networks:
+      - network_wordpress
+    depends_on:
+      - mariadb
+  joomla:
+    image: bitnami/joomla
+    environment:
+      VIRTUAL_HOST : myjoomla.net
+      MARIADB_HOST : mariadb
+      MARIADB_PORT_NUMBER : 3306
+      MARIADB_ROOT_PASSWORD: rootroot12
+      MYSQL_CLIENT_CREATE_DATABASE_NAME: bitnami
+      MYSQL_CLIENT_CREATE_DATABASE_USER: user
+      MYSQL_CLIENT_CREATE_DATABASE_PASSWORD: pass123
+      JOOMLA_DATABASE_NAME : bitnami
+      JOOMLA_DATABASE_USER : user
+      JOOMLA_DATABASE_PASSWORD : pass123
+      JOOMLA_USERNAME: user
+      JOOMLA_PASSWORD: pass123
+      JOOMLA_EMAIL: daa.devel   oper@gmail.com
+    volumes:
+      - 'joomla_data:/bitnami'
+    ports:
+      - 8080:80
+      - 8443:443
+    networks:
+      - network_joomla
+    depends_on:
+      - mariadb
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - mariadb
+      - joomla
+      - wordpress
+    networks:
+      - network_joomla
+      - network_wordpress
+volumes:
+  # Volumes go here
+  mariadb_data:
+    driver: local
+  wordpress_data:
+    driver: local
+  joomla_data:
+    driver: local
+networks:
+  # Networks go here
+  network_joomla:
+  network_wordpress:
