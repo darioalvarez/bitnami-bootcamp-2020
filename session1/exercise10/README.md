@@ -10,7 +10,7 @@
 
 4. Exported port 80 of nginx proxy to host server.
 
-To make it all working, run:
+Run following command to deploy containers:
 
 ```
 docker-compose up -d
@@ -22,4 +22,4 @@ Check logs to confirm all containers are fully deployed using:
 docker-compose logs -f
 ```
 
-To test for expected behavior open in a browser both URLs <http://myfirstwp.net> and <http://myjoomla.net> where it should be a wordpress site and a joomla site, respectively.
+Finally, open in a browser both URLs <http://myfirstwp.net> and <http://myjoomla.net> where there will be a wordpress site and a joomla site, respectively. Credentials for both sites admin dashboard are created in docker-compose.yml file.

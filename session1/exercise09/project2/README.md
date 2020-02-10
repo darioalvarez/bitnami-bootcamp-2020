@@ -12,8 +12,7 @@ command: bash -c "mysqldump  -h$${MARIADB_HOST} -u$${MARIADB_USER} -P$${MARIADB_
 
 The dump will have a timestamp signature, so every new dump will be stored in a new file.
 
-
-To test for functionality run first the docker-compose file in exercise 9.1, and having it fully running, execute:
+Run following command to deploy containers (Notice that containers from exercise 9.1 should be already running):
 
 ```
 docker-compose up -d
