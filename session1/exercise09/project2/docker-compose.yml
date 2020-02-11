@@ -11,7 +11,7 @@ services:
       MARIADB_USER : wp_user
       MARIADB_PASSWORD : wp_pass
     volumes:
-      - '/Users/dario/Documents/WORK/BitnamiBootcamp/backup:/bitnami/mariadb_backup'
+      - '../backup:/bitnami/mariadb_backup'
     networks:
       - project1_default
     command: bash -c "mysqldump  -h$${MARIADB_HOST} -u$${MARIADB_USER} -P$${MARIADB_PORT_NUMBER}  $${MARIADB_DATABASE} --password=$${MARIADB_PASSWORD}  --single-transaction   > /bitnami/mariadb_backup/backup-`date +%Y%m%d%H%M%S`.sql"

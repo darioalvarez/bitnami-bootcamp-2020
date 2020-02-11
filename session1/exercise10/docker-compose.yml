@@ -34,9 +34,6 @@ services:
       WORDPRESS_BLOG_NAME: Dario
     volumes:
       - 'wordpress_data:/bitnami'
-    ports:
-      - 8081:80
-      - 8444:443
     networks:
       - network_wordpress
     depends_on:
@@ -56,12 +53,9 @@ services:
       JOOMLA_DATABASE_PASSWORD : pass123
       JOOMLA_USERNAME: user
       JOOMLA_PASSWORD: pass123
-      JOOMLA_EMAIL: daa.devel   oper@gmail.com
+      JOOMLA_EMAIL: daa.developer@gmail.com
     volumes:
       - 'joomla_data:/bitnami'
-    ports:
-      - 8080:80
-      - 8443:443
     networks:
       - network_joomla
     depends_on:

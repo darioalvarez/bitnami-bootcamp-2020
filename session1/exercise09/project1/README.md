@@ -7,9 +7,9 @@
     * Persistence with volumes
     * Isolated in a network
 
-Created a docker-compose.yml file containind declaration of both containers: mariadb and wordpress. Each of them with their own volume and sharing the same isolated network. Wordpress container has implemented a porth binding with host server, so when deployed it will be possible to see wordpress site in a host web browser.
+Created a docker-compose.yml file containing the declaration of both containers: mariadb and wordpress. Each of them with their own volume and sharing the same isolated network. Wordpress container has implemented a port binding with the host server, so when deployed it will be possible to see wordpress site in a host web browser.
 
-Run following command to deploy containers:
+Run the following command to deploy containers:
 
 ```
 docker-compose up -d
