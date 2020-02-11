@@ -32,6 +32,8 @@
 
 3. A final bitnami/nginx container is created to publish the resulting website. It needs to copy static files from previous container and save them in public nginx directory.
 
+Note that, in spite of bitnami/golang image has 685MB, bitnami/minideb image has 67.5MB and bitnami/nginx image has 89.6MB, the resulting image has only 90MB, because the docker only used golang and minideb for download and compiling hugo and the website, and the static result is deployed using only nginx image. This means that resulting image is roughly composed by 89.6MB from nginx plus aproximately 0.4MB from static website.
+
 ### Running solution
 
 In order to create the image in current directory it is needed to run following command:
