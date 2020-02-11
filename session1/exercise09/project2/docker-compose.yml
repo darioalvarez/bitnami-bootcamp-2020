@@ -1,0 +1,21 @@
+version: '3'
+services:
+  # Containers go here
+  mariadbbackup:
+    image: bitnami/mariadb
+    environment: 
+      MARIADB_HOST: mariadb
+      MARIADB_DATABASE : bitnami_wordpress
+      MARIADB_PORT_NUMBER: 3306
+      MARIADB_ROOT_PASSWORD : rootroot12
+      MARIADB_USER : wp_user
+      MARIADB_PASSWORD : wp_pass
+    volumes:
+      - '../backup:/bitnami/mariadb_backup'
+    networks:
+      - project1_default
+    command: bash -c "mysqldump  -h$${MARIADB_HOST} -u$${MARIADB_USER} -P$${MARIADB_PORT_NUMBER}  $${MARIADB_DATABASE} --password=$${MARIADB_PASSWORD}  --single-transaction   > /bitnami/mariadb_backup/backup-`date +%Y%m%d%H%M%S`.sql"
+networks:
+  # Networks go here
+  project1_default:
+    external: true
