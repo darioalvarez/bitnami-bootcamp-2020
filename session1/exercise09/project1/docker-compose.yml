@@ -1,0 +1,43 @@
+version: '3'
+services:
+  # Containers go here
+  mariadb:
+    image: bitnami/mariadb
+    environment: 
+      MARIADB_DATABASE : bitnami_wordpress
+      MARIADB_ROOT_PASSWORD : rootroot12
+      MARIADB_USER : wp_user
+      MARIADB_PASSWORD : wp_pass
+    volumes: 
+      - 'mariadb_data:/bitnami/mariadb'
+  wordpress:
+    image: bitnami/wordpress
+    environment:
+      MARIADB_HOST : mariadb
+      MARIADB_PORT_NUMBER : 3306
+      MARIADB_ROOT_PASSWORD: rootroot12
+      MYSQL_CLIENT_CREATE_DATABASE_NAME: bitnami_wordpress
+      MYSQL_CLIENT_CREATE_DATABASE_USER: wp_user
+      MYSQL_CLIENT_CREATE_DATABASE_PASSWORD: wp_pass
+      WORDPRESS_DATABASE_NAME : bitnami_wordpress
+      WORDPRESS_DATABASE_USER : wp_user
+      WORDPRESS_DATABASE_PASSWORD : wp_pass
+      WORDPRESS_USERNAME: wp_user
+      WORDPRESS_PASSWORD: wp_pass
+      WORDPRESS_EMAIL: daa.developer@gmail.com
+      WORDPRESS_FIRST_NAME: Dario
+      WORDPRESS_LAST_NAME: Alvarez Arteaga
+      WORDPRESS_BLOG_NAME: Dario
+    volumes:
+      - 'wordpress_data:/bitnami'
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - mariadb
+volumes:
+  # Volumes go here
+  mariadb_data:
+    driver: local
+  wordpress_data:
+    driver: local
