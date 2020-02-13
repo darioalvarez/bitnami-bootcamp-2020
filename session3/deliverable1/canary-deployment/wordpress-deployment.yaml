@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-deployment-canary
+  namespace: s3d1
+  labels:
+    app: wordpress
+    tier: frontend
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+        - name: wordpress-pod
+          image: bitnami/wordpress:5.3.2
+          ports:
+            - name: http-server
+              containerPort: 80
+          env:
+            - name: MARIADB_DATABASE 
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: MARIADB_DATABASE
+            - name: MARIADB_HOST
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: MARIADB_HOST
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: password
+            - name: WORDPRESS_DATABASE_NAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_DATABASE_NAME
+            - name: WORDPRESS_DATABASE_USER
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_DATABASE_USER
+            - name: WORDPRESS_DATABASE_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: password
+            - name: WORDPRESS_USERNAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_USERNAME
+            - name: WORDPRESS_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: password
+            - name: WORDPRESS_EMAIL
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_EMAIL
+            - name: WORDPRESS_FIRST_NAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_FIRST_NAME
+            - name: WORDPRESS_LAST_NAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_LAST_NAME
+            - name: WORDPRESS_BLOG_NAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: wordpress-configmap
+                    key: WORDPRESS_BLOG_NAME

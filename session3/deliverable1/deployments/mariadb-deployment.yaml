@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+  namespace: s3d1
+  labels:
+    app: mariadb
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mariadb
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        tier: backend
+    spec:
+      containers:
+        - name: mariadb-pod
+          image: bitnami/mariadb
+          startupProbe:
+            tcpSocket:
+              port: mariadb-server
+            failureThreshold: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: mariadb-server
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: 
+                - mysql
+                - -uroot
+                - -prootroot12
+                - -e
+                - 'SELECT 1'
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 10
+          ports:
+            - name: mariadb-server
+              containerPort: 3306
+          env:
+            - name: MARIADB_DATABASE 
+              valueFrom:
+                  configMapKeyRef:
+                    name: mariadb-configmap
+                    key: MARIADB_DATABASE
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: password
+            - name: MARIADB_USER
+              valueFrom:
+                  configMapKeyRef:
+                    name: mariadb-configmap
+                    key: MARIADB_USER
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: password
