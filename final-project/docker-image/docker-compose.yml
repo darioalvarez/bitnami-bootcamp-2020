@@ -1,0 +1,82 @@
+version: '3'
+services:
+  # Containers go here
+  ckan:
+    # build: .
+    image: darioalvarez/ckan:latest
+    # command: tail -f /dev/null
+    # environment: 
+    #   - CKAN_SITE_URL=http://ckan.local.net
+    #   - CKAN_HOME=/usr/lib/ckan
+    #   - CKAN_VENV=$CKAN_HOME/venv
+    #   - CKAN_CONFIG=/etc/ckan
+    #   - CKAN_STORAGE_PATH=/var/lib/ckan
+    volumes: 
+      - ckan_data:/var/lib/ckan'
+    ports:
+      - '5000:5000'
+    depends_on:
+      - redis
+      - postgresql
+      - solr
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  postgresql:
+    image: bitnami/postgresql:latest
+    environment:
+      # - POSTGRESQL_USERNAME=my_user
+      - POSTGRESQL_PASSWORD=password123
+      # - POSTGRESQL_DATABASE=my_database
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    ports:
+      - '5432:5432'
+
+  solr:
+    image: miguelaeh/solr
+    command:
+      - 'bash'
+      - '-c'
+      - |
+        . /opt/bitnami/base/functions
+        . /opt/bitnami/base/helpers
+        nami_initialize solr
+        curl>'/tmp/ckan-core.tar.gz' 'http://apps-tests-artifacts.s3.amazonaws.com/ckan-core.tar.gz'
+        tar xzf /tmp/ckan-core.tar.gz -C /opt/bitnami/solr/server/solr
+        /opt/bitnami/solr/bin/solr -p 8983 -d /opt/bitnami/solr/server -f -force
+    # environment: 
+    #   MARIADB_DATABASE : bitnami_wordpress
+    volumes:
+      - solr_data:/bitnami
+    ports:
+      - '8983:8983'
+
+volumes:
+  # Volumes go here
+  ckan_data:
+    driver: local
+  redis_data:
+    driver: local
+  postgresql_data:
+    driver: local
+  solr_data:
+    driver: local
+
+
+# install_packages python-dev python-pip python-virtualenv python-wheel libpq-dev libxml2-dev libxslt-dev libgeos-dev libssl-dev libffi-dev postgresql-client build-essential git-core vim wget
+# CKAN_HOME=/usr/lib/ckan
+# CKAN_VENV=$CKAN_HOME/venv
+# CKAN_CONFIG=/etc/ckan
+# CKAN_STORAGE_PATH=/var/lib/ckan
+# CKAN_SITE_URL=http://ckan.local.net
+# useradd -r -u 900 -m -c "ckan account" -d $CKAN_HOME -s /bin/false ckan
+
+
+# mkdir -p $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
+#     virtualenv $CKAN_VENV && \
+#     ln -s $CKAN_VENV/bin/pip /usr/local/bin/ckan-pip &&\
+#     ln -s $CKAN_VENV/bin/paster /usr/local/bin/ckan-paster

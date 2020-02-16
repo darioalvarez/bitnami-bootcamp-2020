@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solr-deployment
+  labels:
+    app: solr
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solr
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: solr
+        tier: backend
+    spec:
+      containers:
+        - name: solr-pod
+          image: miguelaeh/solr
+          command:
+            - 'bash'
+            - '-c'
+            - |
+              . /opt/bitnami/base/functions
+              . /opt/bitnami/base/helpers
+              nami_initialize solr
+              curl>'/tmp/ckan-core.tar.gz' 'http://apps-tests-artifacts.s3.amazonaws.com/ckan-core.tar.gz'
+              tar xzf /tmp/ckan-core.tar.gz -C /opt/bitnami/solr/server/solr
+              /opt/bitnami/solr/bin/solr -p 8983 -d /opt/bitnami/solr/server -f -force
+          ports:
+            - name: solr-server
+              containerPort: 8983
+

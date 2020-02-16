@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-deployment
+  # namespace: 
+  labels:
+    app: postgresql
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        tier: backend
+    spec:
+      containers:
+        - name: postgresql-pod
+          image: bitnami/postgresql:latest
+          ports:
+            - name: postgres-server
+              containerPort: 5432
+          env:
+            - name: POSTGRESQL_PASSWORD 
+              value: "password123"

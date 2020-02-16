@@ -1,0 +1,55 @@
+apiVersion: v2
+name: chart
+description: Bitnami Bootcamp 2020 Final Project
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application.
+appVersion: 1.0.0
+
+keywords:
+  - ckan
+  - Bitnami
+  - Project
+
+home: https://www.bitnami.com
+
+dependencies: # A list of the chart requirements (optional)
+  # - name: bitnami/redis
+  #   version: 10.5.1
+  #   repository: https://charts.bitnami.com/bitnami
+  #   # condition: (optional) A yaml path that resolves to a boolean, used for enabling/disabling charts (e.g. subchart1.enabled )
+  #   # tags: # (optional)
+  #   #   - Tags can be used to group charts for enabling/disabling together
+  #   # enabled: (optional) Enabled bool determines if chart should be loaded
+  #   # import-values: # (optional)
+  #   #   - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
+  #   # alias:
+
+  # - name: bitnami/postgresql
+  #   version: 8.3.4
+  #   repository: https://charts.bitnami.com/bitnami
+
+  # - name: bitnami/postgresql
+  #   version: 8.3.4
+  #   repository: https://charts.bitnami.com/bitnami
+
+maintainers: # (optional)
+  - name: Dario Alvarez Arteaga
+    email: daa.developer@gmail.com
+    url: https://github.com/darioalvarez
+icon: https://upload.wikimedia.org/wikipedia/commons/b/b8/Lohj.png
+deprecated: false

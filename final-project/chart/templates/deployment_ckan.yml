@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ckan-deployment
+  # namespace: 
+  labels:
+    app: frontend
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ckan
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: ckan
+        tier: frontend
+    spec:
+      containers:
+        - name: ckan-pod
+          image: darioalvarez/ckan:latest
+          ports:
+            - name: ckan-server
+              containerPort: 5000
+          # env:
+          #   - name: ALLOW_EMPTY_PASSWORD 
+          #     value: "yes"
