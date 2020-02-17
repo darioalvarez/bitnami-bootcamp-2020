@@ -1,12 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: solr-deployment
+  name: {{ .Release.Name }}-solr-deployment
+  namespace: {{ .Values.namespace }}
   labels:
     app: solr
     tier: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: solr
@@ -17,9 +18,16 @@ spec:
         app: solr
         tier: backend
     spec:
+      volumes:
+        - name: solr-data
+          persistentVolumeClaim:
+            claimName: my-pvc
       containers:
         - name: solr-pod
-          image: miguelaeh/solr
+          image: miguelaeh/solr:latest
+          volumeMounts:
+            - mountPath: /bitnami
+              name: solr-data
           command:
             - 'bash'
             - '-c'
@@ -33,4 +41,3 @@ spec:
           ports:
             - name: solr-server
               containerPort: 8983
-

@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql-deployment
-  # namespace: 
+  name: {{ .Release.Name }}-postgresql-deployment
+  namespace: {{ .Values.namespace }}
   labels:
     app: postgresql
     tier: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: postgresql
@@ -18,12 +18,20 @@ spec:
         app: postgresql
         tier: backend
     spec:
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: my-pvc
       containers:
         - name: postgresql-pod
           image: bitnami/postgresql:latest
+          volumeMounts:
+            - mountPath: /bitnami/postgresql
+              name: postgresql-data
           ports:
             - name: postgres-server
               containerPort: 5432
-          env:
-            - name: POSTGRESQL_PASSWORD 
-              value: "password123"
+          envFrom:
+            - configMapRef:
+                name: ckan-configmap
+

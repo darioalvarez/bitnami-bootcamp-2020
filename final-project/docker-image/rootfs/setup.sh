@@ -1,54 +1,65 @@
 #!/bin/bash
 
-# Changing port
-# sed -i "s/listen 80/listen ${NGINX_PORT}/g" /etc/nginx/sites-available/default
-# sed -i "s/listen \[::\]:80/listen \[::\]:${NGINX_PORT}/g" /etc/nginx/sites-available/default
-
-# Changing pid location
-# sed -i "s/pid \/run\/nginx.pid/pid \/tmp\/nginx.pid/g" /etc/nginx/nginx.conf
-
-# ln -sf /dev/stdout /var/log/nginx/access.log
-# ln -sf /dev/stderr /var/log/nginx/error.log
-
-echo '------- Executing setup.sh -------'
 sleep 10
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"CREATE DATABASE my_datastore;"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"CREATE ROLE datastore_user_read WITH LOGIN CREATEDB PASSWORD 'password123';"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"CREATE DATABASE ${POSTGRESQL_CKAN_DATASTORE};"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"CREATE ROLE datastore_user_write WITH LOGIN CREATEDB PASSWORD 'password123';"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"CREATE ROLE ${POSTGRESQL_DATASTORE_USER_READ} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATASTORE_USER_READ_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"GRANT ALL PRIVILEGES ON DATABASE my_datastore TO datastore_user_read;"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"CREATE ROLE ${POSTGRESQL_DATASTORE_USER_WRITE} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATASTORE_USER_WRITE_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"GRANT ALL PRIVILEGES ON DATABASE my_datastore TO datastore_user_write;"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATASTORE} TO ${POSTGRESQL_DATASTORE_USER_READ};"
+
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATASTORE} TO ${POSTGRESQL_DATASTORE_USER_WRITE};"
 
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"CREATE DATABASE my_database;"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"CREATE DATABASE ${POSTGRESQL_CKAN_DATABASE};"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"CREATE ROLE database_user WITH LOGIN CREATEDB PASSWORD 'password123';"
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"CREATE ROLE ${POSTGRESQL_DATABASE_USER} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATABASE_USER_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h postgresql -U postgres -c \
-"GRANT ALL PRIVILEGES ON DATABASE my_database TO database_user;"
-
+PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATABASE} TO ${POSTGRESQL_DATABASE_USER};"
 
 
 
 # Step 7 !!!!!!! init database
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
+
+if [[ "${CKAN_INITIALIZE_DB}" = "yes"  ]]; then
+    paster make-config ckan /etc/ckan/default/development.ini
+fi
+
+
+
+# Edit development.ini file
+sed -i "s!site_id=default!site_id=${CKAN_SITE_ID}!1" /etc/ckan/default/development.ini
+sed -i "s!sqlalchemy.url = postgresql://ckan_default:pass@localhost/ckan_default!sqlalchemy.url = postgresql://${POSTGRESQL_DATABASE_USER}:${POSTGRESQL_DATABASE_USER_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATABASE}!1" /etc/ckan/default/development.ini
+sed -i "s!ckan.site_url =!ckan.site_url = ${CKAN_HOST}:${CKAN_PORT}!1" /etc/ckan/default/development.ini
+sed -i "s!#solr_url = http://127.0.0.1:8983/solr!solr_url = http://${SOLR_HOST}:${SOLR_PORT}/solr/${SOLR_CORE_NAME}!1" /etc/ckan/default/development.ini
+sed -i "s!#ckan.redis.url = redis://localhost:6379/0!ckan.redis.url = redis://${REDIS_HOST}:${REDIS_PORT}/0!1" /etc/ckan/default/development.ini
+sed -i "s!#ckan.storage_path = /var/lib/ckan!ckan.storage_path = ${CKAN_STORAGE_PATH}!1" /etc/ckan/default/development.ini
+sed -i "s!ckan.plugins = stats text_view image_view recline_view!ckan.plugins = stats text_view image_view recline_view ${CKAN_PLUGINS}!1" /etc/ckan/default/development.ini
+sed -i "s!#ckan.datastore.write_url = postgresql://ckan_default:pass@localhost/datastore_default!ckan.datastore.write_url = postgresql://${POSTGRESQL_DATASTORE_USER_WRITE}:${POSTGRESQL_DATASTORE_USER_WRITE_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATASTORE}!1" /etc/ckan/default/development.ini
+sed -i "s!#ckan.datastore.read_url = postgresql://datastore_default:pass@localhost/datastore_default!ckan.datastore.read_url = postgresql://${POSTGRESQL_DATASTORE_USER_READ}:${POSTGRESQL_DATASTORE_USER_READ_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATASTORE}!1" /etc/ckan/default/development.ini
+
+
+
+
+
+
+
 paster db init -c /etc/ckan/default/development.ini
 
-paster --plugin=ckan user add dario email='daa.developer@gmail.com' password='12345678'  -c /etc/ckan/default/development.ini
-paster --plugin=ckan sysadmin add dario -c /etc/ckan/default/development.ini
+paster --plugin=ckan user add ${CKAN_ADMIN} email="${CKAN_ADMIN_EMAIL}" password="${CKAN_ADMIN_PASSWORD}" -c /etc/ckan/default/development.ini
+paster --plugin=ckan sysadmin add ${CKAN_ADMIN} -c /etc/ckan/default/development.ini
 
 deactivate
-
-echo '------- Complete setup.sh --------'

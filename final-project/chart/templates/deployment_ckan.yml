@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ckan-deployment
-  # namespace: 
+  name: {{ .Release.Name }}-ckan-deployment
+  namespace: {{ .Values.namespace }}
   labels:
     app: frontend
     tier: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: ckan
@@ -18,12 +18,29 @@ spec:
         app: ckan
         tier: frontend
     spec:
+      # volumes:
+      #   - name: ckan-data1
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
+      #   - name: ckan-data2
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
+      #   - name: ckan-data3
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
       containers:
         - name: ckan-pod
           image: darioalvarez/ckan:latest
           ports:
             - name: ckan-server
               containerPort: 5000
-          # env:
-          #   - name: ALLOW_EMPTY_PASSWORD 
-          #     value: "yes"
+          # volumeMounts:
+          #   - mountPath: /usr/lib/ckan
+          #     name: ckan-data1
+          #   - mountPath: /etc/ckan
+          #     name: ckan-data2
+          #   - mountPath: /var/lib/ckan
+          #     name: ckan-data3
+          envFrom:
+            - configMapRef:
+                name: ckan-configmap

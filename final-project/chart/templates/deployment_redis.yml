@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-deployment
-  # namespace: 
+  name: {{ .Release.Name }}-redis-deployment
+  namespace: {{ .Values.namespace }}
   labels:
     app: redis
     tier: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: redis
@@ -18,9 +18,16 @@ spec:
         app: redis
         tier: backend
     spec:
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: my-pvc
       containers:
         - name: redis-pod
           image: bitnami/redis:latest
+          volumeMounts:
+            - mountPath: /bitnami
+              name: redis-data
           ports:
             - name: redis-server
               containerPort: 6379

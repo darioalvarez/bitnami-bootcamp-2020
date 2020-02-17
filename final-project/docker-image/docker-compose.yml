@@ -3,16 +3,41 @@ services:
   # Containers go here
   ckan:
     # build: .
-    image: darioalvarez/ckan:latest
+    image: darioalvarez/ckan:1.0
     # command: tail -f /dev/null
     # environment: 
-    #   - CKAN_SITE_URL=http://ckan.local.net
-    #   - CKAN_HOME=/usr/lib/ckan
-    #   - CKAN_VENV=$CKAN_HOME/venv
-    #   - CKAN_CONFIG=/etc/ckan
-    #   - CKAN_STORAGE_PATH=/var/lib/ckan
+      # - CKAN_HOST="http://127.0.0.1"
+      # - CKAN_PORT=5000
+      # - CKAN_INITIALIZE_DB="no"
+      # - CKAN_SITE_ID="default"
+      # - CKAN_PLUGINS="datastore"
+      # - CKAN_STORAGE_PATH="/usr/lib/ckan"
+      # - CKAN_CONF_PATH="/usr/lib/ckan"
+      # - CKAN_ADMIN="ckan"
+      # - CKAN_ADMIN_EMAIL="ckan@ckan.com"
+      # - CKAN_ADMIN_PASSWORD="12345678"
+      # - POSTGRESQL_HOST="postgresql"
+      # - POSTGRESQL_PORT="5432"
+      # - POSTGRESQL_DATABASE_USER="db_user"
+      # - POSTGRESQL_DATABASE_USER_PASSWORD="password123"
+      # - POSTGRESQL_DATASTORE_USER_READ="ds_user_reader"
+      # - POSTGRESQL_DATASTORE_USER_READ_PASSWORD="password123"
+      # - POSTGRESQL_DATASTORE_USER_WRITE="ds_user_writer"
+      # - POSTGRESQL_DATASTORE_USER_WRITE_PASSWORD="password123"
+      # - POSTGRESQL_CKAN_DATABASE="ckan_db"
+      # - POSTGRESQL_CKAN_DATASTORE="ckan_ds"
+      # - SOLR_HOST="solr"
+      # - SOLR_PORT="8983"
+      # - SOLR_CORE_NAME="ckan-core"
+      # - REDIS_HOST="redis"
+      # - REDIS_PORT="6379"
+      # - REDIS_USER="redis_user"
+      # - REDIS_PASSWORD="password123"
     volumes: 
-      - ckan_data:/var/lib/ckan'
+      - ckan-data1:/var/lib/ckan
+      - ckan-data2:/etc/ckan
+      - ckan-data3:/usr/lib/ckan
+
     ports:
       - '5000:5000'
     depends_on:
@@ -24,15 +49,15 @@ services:
     image: bitnami/redis:latest
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis-data:/bitnami
 
   postgresql:
     image: bitnami/postgresql:latest
     environment:
-      # - POSTGRESQL_USERNAME=my_user
       - POSTGRESQL_PASSWORD=password123
-      # - POSTGRESQL_DATABASE=my_database
     volumes:
-      - postgresql_data:/bitnami/postgresql
+      - postgresql-data:/bitnami/postgresql
     ports:
       - '5432:5432'
 
@@ -48,35 +73,22 @@ services:
         curl>'/tmp/ckan-core.tar.gz' 'http://apps-tests-artifacts.s3.amazonaws.com/ckan-core.tar.gz'
         tar xzf /tmp/ckan-core.tar.gz -C /opt/bitnami/solr/server/solr
         /opt/bitnami/solr/bin/solr -p 8983 -d /opt/bitnami/solr/server -f -force
-    # environment: 
-    #   MARIADB_DATABASE : bitnami_wordpress
     volumes:
-      - solr_data:/bitnami
+      - solr-data:/bitnami
     ports:
       - '8983:8983'
 
 volumes:
   # Volumes go here
-  ckan_data:
+  ckan-data1:
     driver: local
-  redis_data:
+  ckan-data2:
     driver: local
-  postgresql_data:
+  ckan-data3:
     driver: local
-  solr_data:
+  redis-data:
     driver: local
-
-
-# install_packages python-dev python-pip python-virtualenv python-wheel libpq-dev libxml2-dev libxslt-dev libgeos-dev libssl-dev libffi-dev postgresql-client build-essential git-core vim wget
-# CKAN_HOME=/usr/lib/ckan
-# CKAN_VENV=$CKAN_HOME/venv
-# CKAN_CONFIG=/etc/ckan
-# CKAN_STORAGE_PATH=/var/lib/ckan
-# CKAN_SITE_URL=http://ckan.local.net
-# useradd -r -u 900 -m -c "ckan account" -d $CKAN_HOME -s /bin/false ckan
-
-
-# mkdir -p $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
-#     virtualenv $CKAN_VENV && \
-#     ln -s $CKAN_VENV/bin/pip /usr/local/bin/ckan-pip &&\
-#     ln -s $CKAN_VENV/bin/paster /usr/local/bin/ckan-paster
+  postgresql-data:
+    driver: local
+  solr-data:
+    driver: local

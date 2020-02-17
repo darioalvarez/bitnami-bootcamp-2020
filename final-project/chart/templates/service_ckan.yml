@@ -1,14 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ckan-service
+  name: {{ .Release.Name }}-ckan-service
+  namespace: {{ .Values.namespace }}
   labels:
     app: ckan
     tier: frontend
 spec:
   ports:
-  - port: 5050
-    targetPort: ckan-server
+    - name: http
+      port: 80
+      targetPort: ckan-server
   selector:
     app: ckan
     tier: frontend
