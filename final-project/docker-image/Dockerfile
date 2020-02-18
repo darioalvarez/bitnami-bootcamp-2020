@@ -9,7 +9,7 @@ RUN install_packages libmagic-dev postgresql-client
 RUN useradd -r -u 1001 -g root nonroot
 
 ENV CKAN_HOST="http://127.0.0.1" \
-    CKAN_PORT="5000" \
+    CKAN_PORT="5001" \
     CKAN_INITIALIZE_DB="yes" \
     CKAN_SITE_ID="default" \
     CKAN_PLUGINS="datastore" \
@@ -20,6 +20,7 @@ ENV CKAN_HOST="http://127.0.0.1" \
     CKAN_ADMIN_PASSWORD="12345678" \
     POSTGRESQL_HOST=postgresql \
     POSTGRESQL_PORT="5432" \
+    POSTGRESQL_PASSWORD="password123" \
     POSTGRESQL_DATABASE_USER="db_user" \
     POSTGRESQL_DATABASE_USER_PASSWORD="password123" \
     POSTGRESQL_DATASTORE_USER_READ="ds_user_reader" \
@@ -36,7 +37,9 @@ ENV CKAN_HOST="http://127.0.0.1" \
     REDIS_USER="redis_user" \
     REDIS_PASSWORD="password123"
 
-EXPOSE ${CKAN_PORT}
+ENV CKAN_INNER_PORT=${CKAN_PORT}
+
+EXPOSE ${CKAN_INNER_PORT}
 
 COPY rootfs /
 RUN /postunpack.sh

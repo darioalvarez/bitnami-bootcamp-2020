@@ -2,29 +2,29 @@
 
 sleep 20
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE DATABASE ${POSTGRESQL_CKAN_DATASTORE};"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE ROLE ${POSTGRESQL_DATASTORE_USER_READ} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATASTORE_USER_READ_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE ROLE ${POSTGRESQL_DATASTORE_USER_WRITE} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATASTORE_USER_WRITE_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATASTORE} TO ${POSTGRESQL_DATASTORE_USER_READ};"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATASTORE} TO ${POSTGRESQL_DATASTORE_USER_WRITE};"
 
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE DATABASE ${POSTGRESQL_CKAN_DATABASE};"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE ROLE ${POSTGRESQL_DATABASE_USER} WITH LOGIN CREATEDB PASSWORD '${POSTGRESQL_DATABASE_USER_PASSWORD}';"
 
-PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
+PGPASSWORD=${POSTGRESQL_PASSWORD} psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATABASE} TO ${POSTGRESQL_DATABASE_USER};"
 
 cd /usr/lib/ckan/default/src/ckan
@@ -34,6 +34,7 @@ paster make-config ckan /etc/ckan/default/development.ini
 
 sed -i "s!site_id=default!site_id=${CKAN_SITE_ID}!1" /etc/ckan/default/development.ini
 sed -i "s!sqlalchemy.url = postgresql://ckan_default:pass@localhost/ckan_default!sqlalchemy.url = postgresql://${POSTGRESQL_DATABASE_USER}:${POSTGRESQL_DATABASE_USER_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATABASE}!1" /etc/ckan/default/development.ini
+sed -i "s!port = 5000!port = ${CKAN_INNER_PORT}!1" /etc/ckan/default/development.ini
 sed -i "s!ckan.site_url =!ckan.site_url = ${CKAN_HOST}:${CKAN_PORT}!1" /etc/ckan/default/development.ini
 sed -i "s!#solr_url = http://127.0.0.1:8983/solr!solr_url = http://${SOLR_HOST}:${SOLR_PORT}/solr/${SOLR_CORE_NAME}!1" /etc/ckan/default/development.ini
 sed -i "s!#ckan.redis.url = redis://localhost:6379/0!ckan.redis.url = redis://${REDIS_HOST}:${REDIS_PORT}/0!1" /etc/ckan/default/development.ini

@@ -5,6 +5,34 @@
 replicaCount: 1
 namespace: default
 
+adminPassword: "password1234" 
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: cookie
+  hosts:
+    - host: ckan.local.net
+      paths: ["/"]
+
+livenessProbe:
+  initialDelaySeconds: 60
+  failureThreshold: 5
+  successThreshold: 1
+  periodSeconds: 30
+  timeoutSeconds: 10
+
+readinessProbe:
+  initialDelaySeconds: 90
+  failureThreshold: 5
+  successThreshold: 1
+  periodSeconds: 30
+  timeoutSeconds: 10
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
@@ -12,8 +40,6 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-adminPassword: "password123" 
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -34,18 +60,6 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: true
-  annotations:
-    nginx.ingress.kubernetes.io/affinity: cookie
-  hosts:
-    - host: ckan.local.net
-      paths: ["/"]
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

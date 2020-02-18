@@ -5,9 +5,10 @@ services:
     # build: .
     image: darioalvarez/ckan:latest
     # command: tail -f /dev/null
-    # environment: 
+    environment: 
       # - CKAN_HOST="http://127.0.0.1"
-      # - CKAN_PORT=5000
+      - CKAN_PORT=5001
+      - CKAN_INNER_PORT=5001
       # - CKAN_INITIALIZE_DB="yes"
       # - CKAN_SITE_ID="default"
       # - CKAN_PLUGINS="datastore"
@@ -39,7 +40,7 @@ services:
       - ckan-data3:/usr/lib/ckan
 
     ports:
-      - '5000:5000'
+      - '5001:5001'
     depends_on:
       - redis
       - postgresql
