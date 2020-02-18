@@ -33,5 +33,5 @@ spec:
               containerPort: 5432
           envFrom:
             - configMapRef:
-                name: ckan-configmap
+                name: postgresql-configmap
 

@@ -4,5 +4,4 @@ metadata:
   name: postgresql-configmap
   namespace: {{ .Values.namespace }}
 data:
-  POSTGRESQL_PASSWORD : "password123"
-  
+  POSTGRESQL_PASSWORD: password123
