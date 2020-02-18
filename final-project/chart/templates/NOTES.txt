@@ -1,4 +1,10 @@
-1. Get the application URL by running these commands:
+Thank you for installing {{ .Chart.Name }}. Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+  $ helm status {{ .Release.Name }}
+  $ helm get {{ .Release.Name }}
+
+1. CKAN application URL:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
@@ -19,3 +25,11 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:80
 {{- end }}
+
+To get CKAN admin user, execute (without backslashes):
+kubectl get configmap/ckan-configmap --template={\{.data.CKAN_ADMIN}\}
+
+To get CKAN admin password, execute(without backslashes): 
+kubectl get secrets/ckan-secret --template={\{.data.CKAN_ADMIN_PASSWORD}\} | base64 --decode
+
+.

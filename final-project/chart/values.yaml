@@ -5,7 +5,7 @@
 replicaCount: 1
 namespace: default
 
-adminPassword: "password1234" 
+adminPassword: "password123" 
 
 service:
   type: ClusterIP
