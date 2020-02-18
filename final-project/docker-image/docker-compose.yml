@@ -3,12 +3,12 @@ services:
   # Containers go here
   ckan:
     # build: .
-    image: darioalvarez/ckan:1.0
+    image: darioalvarez/ckan:latest
     # command: tail -f /dev/null
     # environment: 
       # - CKAN_HOST="http://127.0.0.1"
       # - CKAN_PORT=5000
-      # - CKAN_INITIALIZE_DB="no"
+      # - CKAN_INITIALIZE_DB="yes"
       # - CKAN_SITE_ID="default"
       # - CKAN_PLUGINS="datastore"
       # - CKAN_STORAGE_PATH="/usr/lib/ckan"

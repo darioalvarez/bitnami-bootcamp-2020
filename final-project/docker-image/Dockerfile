@@ -1,8 +1,16 @@
+FROM bitnami/minideb:latest as downloader
+RUN install_packages ca-certificates git vim
+WORKDIR /tmp
+RUN git clone https://github.com/ckan/ckan.git
+
 FROM bitnami/python:2
+COPY --from=downloader /tmp/ckan /app/ckan
+RUN install_packages libmagic-dev postgresql-client
+RUN useradd -r -u 1001 -g root nonroot
 
 ENV CKAN_HOST="http://127.0.0.1" \
     CKAN_PORT="5000" \
-    CKAN_INITIALIZE_DB="no" \
+    CKAN_INITIALIZE_DB="yes" \
     CKAN_SITE_ID="default" \
     CKAN_PLUGINS="datastore" \
     CKAN_STORAGE_PATH="/var/lib/ckan" \
@@ -28,36 +36,13 @@ ENV CKAN_HOST="http://127.0.0.1" \
     REDIS_USER="redis_user" \
     REDIS_PASSWORD="password123"
 
-COPY rootfs /
-
-RUN chmod +x /postunpack.sh
-RUN chmod +x /run.sh
-RUN chmod +x /setup.sh
-RUN chmod +x /entrypoint.sh
-
-RUN useradd -r -u 1001 -g root nonroot
-
-RUN /postunpack.sh
-
-RUN install_packages libmagic-dev postgresql-client vim
-
-
-
-WORKDIR /usr/lib/ckan/default/src/ckan
-
-
-
 EXPOSE ${CKAN_PORT}
 
-# USER www-data
-# USER 1001
-
-# RUN useradd -r -u 900 -m -c "ckan account" -d $CKAN_HOME -s /bin/false ckan
-
-# USER 1001
-
-
+COPY rootfs /
+RUN /postunpack.sh
 VOLUME ["${CKAN_STORAGE_PATH}", "${CKAN_CONF_PATH}", "/usr/lib/ckan/"]
+
+USER 1001
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/run.sh" ]

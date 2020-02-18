@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 10
+sleep 20
 
 PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "CREATE DATABASE ${POSTGRESQL_CKAN_DATASTORE};"
@@ -26,7 +26,6 @@ PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
 
 PGPASSWORD=password123 psql -h ${POSTGRESQL_HOST} -U postgres -c \
 "GRANT ALL PRIVILEGES ON DATABASE ${POSTGRESQL_CKAN_DATABASE} TO ${POSTGRESQL_DATABASE_USER};"
-
 
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
