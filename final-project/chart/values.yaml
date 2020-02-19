@@ -5,7 +5,12 @@
 replicaCount: 1
 namespace: default
 
-adminPassword: "password123" 
+adminPassword: "password123"
+
+postgresql:
+  postgresqlPostgresPassword: password123
+  # postgresqlPassword: user
+  # postgresqlUsername: userpass23
 
 service:
   type: ClusterIP
@@ -33,9 +38,9 @@ readinessProbe:
   periodSeconds: 30
   timeoutSeconds: 10
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+# image:
+#   repository: nginx
+#   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""

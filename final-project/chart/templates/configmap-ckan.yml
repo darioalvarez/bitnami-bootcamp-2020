@@ -15,7 +15,7 @@ data:
   CKAN_ADMIN: "ckankan"
   CKAN_ADMIN_EMAIL: "ckan@ckan.com"
   # CKAN_ADMIN_PASSWORD: "12345678"
-  POSTGRESQL_HOST: postgresql
+  POSTGRESQL_HOST: ckan-postgresql
   POSTGRESQL_PORT: "5432"
   POSTGRESQL_DATABASE_USER: db_user
   # POSTGRESQL_DATABASE_USER_PASSWORD: password123
@@ -28,7 +28,7 @@ data:
   SOLR_HOST: solr
   SOLR_PORT: "8983"
   SOLR_CORE_NAME: ckan-core
-  REDIS_HOST: redis
+  REDIS_HOST: ckan-redis-master
   REDIS_PORT: "6379"
   REDIS_USER: redis_user
   # REDIS_PASSWORD: password123

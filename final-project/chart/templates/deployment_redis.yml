@@ -1,36 +1,36 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Release.Name }}-redis-deployment
-  namespace: {{ .Values.namespace }}
-  labels:
-    app: redis
-    tier: backend
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: redis
-      tier: backend
-  template:
-    metadata:
-      labels:
-        app: redis
-        tier: backend
-    spec:
-      volumes:
-        - name: redis-data
-          persistentVolumeClaim:
-            claimName: my-pvc
-      containers:
-        - name: redis-pod
-          image: bitnami/redis:latest
-          volumeMounts:
-            - mountPath: /bitnami
-              name: redis-data
-          ports:
-            - name: redis-server
-              containerPort: 6379
-          env:
-            - name: ALLOW_EMPTY_PASSWORD 
-              value: "yes"
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ .Release.Name }}-redis-deployment
+#   namespace: {{ .Values.namespace }}
+#   labels:
+#     app: redis
+#     tier: backend
+# spec:
+#   replicas: {{ .Values.replicaCount }}
+#   selector:
+#     matchLabels:
+#       app: redis
+#       tier: backend
+#   template:
+#     metadata:
+#       labels:
+#         app: redis
+#         tier: backend
+#     spec:
+#       volumes:
+#         - name: redis-data
+#           persistentVolumeClaim:
+#             claimName: my-pvc
+#       containers:
+#         - name: redis-pod
+#           image: bitnami/redis:latest
+#           volumeMounts:
+#             - mountPath: /bitnami
+#               name: redis-data
+#           ports:
+#             - name: redis-server
+#               containerPort: 6379
+#           env:
+#             - name: ALLOW_EMPTY_PASSWORD 
+#               value: "yes"
