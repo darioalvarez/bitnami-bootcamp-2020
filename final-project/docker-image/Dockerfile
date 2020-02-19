@@ -8,7 +8,7 @@ COPY --from=downloader /tmp/ckan /app/ckan
 RUN install_packages libmagic-dev postgresql-client
 RUN useradd -r -u 1001 -g root nonroot
 
-ENV CKAN_HOST="http://127.0.0.1" \
+ENV CKAN_HOST="" \
     CKAN_PORT="5001" \
     CKAN_INITIALIZE_DB="yes" \
     CKAN_SITE_ID="default" \

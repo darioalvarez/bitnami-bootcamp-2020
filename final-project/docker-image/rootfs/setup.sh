@@ -43,7 +43,7 @@ sed -i "s!ckan.plugins = stats text_view image_view recline_view!ckan.plugins = 
 sed -i "s!#ckan.datastore.write_url = postgresql://ckan_default:pass@localhost/datastore_default!ckan.datastore.write_url = postgresql://${POSTGRESQL_DATASTORE_USER_WRITE}:${POSTGRESQL_DATASTORE_USER_WRITE_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATASTORE}!1" /etc/ckan/default/development.ini
 sed -i "s!#ckan.datastore.read_url = postgresql://datastore_default:pass@localhost/datastore_default!ckan.datastore.read_url = postgresql://${POSTGRESQL_DATASTORE_USER_READ}:${POSTGRESQL_DATASTORE_USER_READ_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_CKAN_DATASTORE}!1" /etc/ckan/default/development.ini
 
-if [[ "${CKAN_INITIALIZE_DB}" = "yes"  ]]; then
+if [[ "${CKAN_INITIALIZE_DB}" = "yes" ]]; then
    paster db init -c /etc/ckan/default/development.ini
 
    paster --plugin=ckan user add ${CKAN_ADMIN} email="${CKAN_ADMIN_EMAIL}" password="${CKAN_ADMIN_PASSWORD}" -c /etc/ckan/default/development.ini

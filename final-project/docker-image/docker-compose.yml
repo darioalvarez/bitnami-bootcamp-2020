@@ -6,7 +6,7 @@ services:
     image: darioalvarez/ckan:latest
     # command: tail -f /dev/null
     environment: 
-      # - CKAN_HOST="http://127.0.0.1"
+      - CKAN_HOST="http://127.0.0.1"
       - CKAN_PORT=5001
       - CKAN_INNER_PORT=5001
       # - CKAN_INITIALIZE_DB="yes"

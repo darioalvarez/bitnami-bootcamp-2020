@@ -2,7 +2,6 @@
 
 mkdir -p /usr/lib/ckan/default
 
-
 virtualenv --no-site-packages /usr/lib/ckan/default
 . /usr/lib/ckan/default/bin/activate
 
