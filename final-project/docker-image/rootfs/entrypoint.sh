@@ -9,6 +9,11 @@ if [[ "${CKAN_HOST}" = "" ]]; then
     exit 1
 fi
 
+if [[ "${CKAN_PORT}" = "" ]]; then
+    echo 'Error: Environment variable CKAN_PORT is mandatory.'
+    exit 1
+fi
+
 if [[ "$*" = "/run.sh"  ]]; then
     /setup.sh
 fi

@@ -26,6 +26,7 @@ To learn more about the release, try:
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:80
 {{- end }}
 
+2. Obtain your credentials:
 To get CKAN admin user, execute (without backslashes):
 kubectl get configmap/ckan-configmap --template={\{.data.CKAN_ADMIN}\}
 
