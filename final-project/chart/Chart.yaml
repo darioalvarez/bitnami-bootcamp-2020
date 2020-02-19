@@ -24,21 +24,9 @@ dependencies:
   - name: postgresql
     version: 8.3.4
     repository: https://charts.bitnami.com/bitnami
-    # condition: (optional) A yaml path that resolves to a boolean, used for enabling/disabling charts (e.g. subchart1.enabled )
-    # tags: # (optional)
-    #   - Tags can be used to group charts for enabling/disabling together
-    # enabled: (optional) Enabled bool determines if chart should be loaded
-    # import-values: # (optional)
-    #   - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
-    # alias:
+    enabled: true
 
   - name: redis
     version: 10.5.3
     repository: https://charts.bitnami.com/bitnami
-    # condition: (optional) A yaml path that resolves to a boolean, used for enabling/disabling charts (e.g. subchart1.enabled )
-    # tags: # (optional)
-    #   - Tags can be used to group charts for enabling/disabling together
     enabled: true
-    # import-values: # (optional)
-    #   - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
-    # alias:
