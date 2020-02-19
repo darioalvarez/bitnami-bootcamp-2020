@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ckan-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: frontend
+    tier: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: ckan
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: ckan
+        tier: frontend
+    spec:
+      # volumes:
+      #   - name: ckan-data1
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
+      #   - name: ckan-data2
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
+      #   - name: ckan-data3
+      #     persistentVolumeClaim:
+      #       claimName: my-pvc
+      containers:
+        - name: ckan-pod
+          image: darioalvarez/ckan:latest
+          ports:
+            - name: ckan-server
+              containerPort: 5001
+          # volumeMounts:
+          #   - mountPath: /usr/lib/ckan
+          #     name: ckan-data1
+          #   - mountPath: /etc/ckan
+          #     name: ckan-data2
+          #   - mountPath: /var/lib/ckan
+          #     name: ckan-data3
+          envFrom:
+            - configMapRef:
+                name: ckan-configmap
+            - secretRef:
+                name: ckan-secret
+          livenessProbe:
+            httpGet:
+              path: /
+              port: ckan-server
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: ckan-server
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}

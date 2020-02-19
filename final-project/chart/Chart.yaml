@@ -1,0 +1,32 @@
+apiVersion: v2
+name: ckan
+description: Bitnami Bootcamp 2020 Final Project
+icon: https://upload.wikimedia.org/wikipedia/commons/b/b8/Lohj.png
+type: application
+version: 0.1.0
+appVersion: 2.8.2
+deprecated: false
+keywords:
+  - ckan
+  - Bitnami
+  - Project
+  - wordpress
+  - http
+  - web
+  - application
+home: https://www.bitnami.com
+maintainers:
+  - name: Dario Alvarez Arteaga
+    email: daa.developer@gmail.com
+    url: https://github.com/darioalvarez
+
+dependencies:
+  - name: postgresql
+    version: 8.3.4
+    repository: https://charts.bitnami.com/bitnami
+    enabled: true
+
+  - name: redis
+    version: 10.5.3
+    repository: https://charts.bitnami.com/bitnami
+    enabled: true

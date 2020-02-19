@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-solr-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: solr
+    tier: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: solr
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: solr
+        tier: backend
+    spec:
+      volumes:
+        - name: solr-data
+          persistentVolumeClaim:
+            claimName: my-pvc
+      containers:
+        - name: solr-pod
+          image: miguelaeh/solr:latest
+          volumeMounts:
+            - mountPath: /bitnami
+              name: solr-data
+          command:
+            - 'bash'
+            - '-c'
+            - |
+              . /opt/bitnami/base/functions
+              . /opt/bitnami/base/helpers
+              nami_initialize solr
+              curl>'/tmp/ckan-core.tar.gz' 'http://apps-tests-artifacts.s3.amazonaws.com/ckan-core.tar.gz'
+              tar xzf /tmp/ckan-core.tar.gz -C /opt/bitnami/solr/server/solr
+              /opt/bitnami/solr/bin/solr -p 8983 -d /opt/bitnami/solr/server -f -force
+          ports:
+            - name: solr-server
+              containerPort: 8983
